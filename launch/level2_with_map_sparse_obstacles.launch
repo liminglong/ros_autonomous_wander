@@ -1,0 +1,56 @@
+<launch>
+    <include file="$(find stdr_robot)/launch/robot_manager.launch" />        
+    <node type="stdr_server_node" pkg="stdr_server" name="stdr_server" output="screen" args="$(find stdr_resources)/maps/sparse_obstacles.yaml"/>
+    
+    <node pkg="tf" type="static_transform_publisher" name="world2map" args="0 0 0 0 0 0  world map 100" />    
+    
+    <include file="$(find stdr_gui)/launch/stdr_gui.launch"/>    
+    
+    <node pkg="stdr_robot" type="robot_handler" name="$(anon robot_spawn)" args="add $(find stdr_resources)/resources/robots/simulated_robot.yaml 4 2 0" />
+    
+    <node pkg="ros_autonomous_wander" type="feelforce.py" name="feel_force">
+    </node>
+    
+    <node pkg="ros_autonomous_wander" type="runaway.py" name="runaway">
+		<remap from="/runaway/heading" to="/runaway/suppressor/heading"/>
+    </node>
+    
+    <node pkg="ros_autonomous_wander" type="turn.py" name="turn">
+    </node>
+    
+    <node pkg="ros_autonomous_wander" type="forward.py" name="forward">
+    </node>
+    
+    <node pkg="ros_autonomous_wander" type="collide.py" name="collide">
+    </node>
+
+	<node pkg="ros_autonomous_wander" type="wander.py" name="wander">
+		<remap from="/wander/heading" to="/wander/inhibitor/heading"/>
+    </node>
+
+	<node pkg="ros_autonomous_wander" type="avoid.py" name="avoid">
+    </node>
+
+	<node pkg="ros_autonomous_wander" type="avoid_runaway_suppressor.py" name="avoid_runaway_suppressor">
+		<remap from="/suppressor/turn/heading" to="/runaway/heading"/>
+    </node>
+	
+	<node pkg="ros_autonomous_wander" type="status.py" name="status">
+    </node>
+	
+	<node pkg="ros_autonomous_wander" type="whenlook.py" name="whenlook">
+    </node>
+
+	<node pkg="ros_autonomous_wander" type="look.py" name="look">
+    </node>
+	
+	<node pkg="ros_autonomous_wander" type="pathplan.py" name="pathplan">
+    </node>
+
+	<node pkg="ros_autonomous_wander" type="whenlook_wander_inhibitor.py" name="whenlook_wander_inhibitor">
+    </node>
+
+	<node pkg="ros_autonomous_wander" type="pathplan_wander_suppressor.py" name="pathplan_wander_suppressor">
+    </node>
+
+</launch>

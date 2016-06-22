@@ -1,0 +1,25 @@
+<launch>
+    <include file="$(find stdr_robot)/launch/robot_manager.launch" />        
+    <node type="stdr_server_node" pkg="stdr_server" name="stdr_server" output="screen" args="$(find stdr_resources)/maps/sparse_obstacles.yaml"/>
+    
+    <node pkg="tf" type="static_transform_publisher" name="world2map" args="0 0 0 0 0 0  world map 100" />    
+    
+    <include file="$(find stdr_gui)/launch/stdr_gui.launch"/>    
+    
+    <node pkg="stdr_robot" type="robot_handler" name="$(anon robot_spawn)" args="add $(find stdr_resources)/resources/robots/simulated_robot.yaml 4 2 0" />
+    
+    <node pkg="ros_autonomous_wander" type="feelforce.py" name="feel_force" output="screen">
+    </node>
+    
+    <node pkg="ros_autonomous_wander" type="runaway.py" name="runaway">
+    </node>
+    
+    <node pkg="ros_autonomous_wander" type="turn.py" name="turn">
+    </node>
+    
+    <node pkg="ros_autonomous_wander" type="forward.py" name="forward">
+    </node>
+    
+    <node pkg="ros_autonomous_wander" type="collide.py" name="collide">
+    </node>
+</launch>
